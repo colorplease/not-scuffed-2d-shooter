@@ -10,10 +10,14 @@ public class what : Agent
 {
    public float MovementSpeed1 = 1f;
     public float JumpForce1 = 1f;
+    public float HP;
+    public float maxHP;
 
     public bool isgrounded1;
 
     public Rigidbody2D rb2d; 
+
+    public HealthController HealthBar;
 
     Vector2 movement;
     // Start is called before the first frame update
@@ -28,6 +32,17 @@ public class what : Agent
         if (other.tag == "Ground")
         {
             isgrounded1 = true;
+        }
+
+        if (other.tag == "Bullet")
+        {
+            HP -= 20;
+            HealthBar.SetHealth(HP, maxHP);
+
+            if(HP <= 0)
+            {
+               Destroy(gameObject); 
+            }
         }
        
     }
@@ -44,7 +59,7 @@ public class what : Agent
     {
         actionsOut[0] = 0;
         actionsOut[1] = 3;
-         if (Input.GetButtonDown("Jump") && isgrounded1 == true)
+         if (Input.GetKeyDown("space") && isgrounded1 == true)
         {
             actionsOut[0] = 1; 
         }
@@ -76,6 +91,12 @@ public class what : Agent
         {
            rb2d.AddForce(new Vector2(-MovementSpeed1, 0));
         }
+    }
+
+    public override void OnEpisodeBegin()
+    {
+        HP = maxHP;
+        HealthBar.SetHealth(HP, maxHP);
     }
 
     
